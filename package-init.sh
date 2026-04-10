@@ -125,16 +125,19 @@ fi
 if [ "$INCLUDE_RUFF_HOOK" = true ] && [ "$INCLUDE_RUFF" = true ]; then
     echo "Adding ruff pre-commit hook..."
     cat "$SCRIPT_DIR/hooks/ruff.hook" >> .git/hooks/pre-commit
+    chmod +x .git/hooks/pre-commit
 fi
 
 if [ "$INCLUDE_MYPY_HOOK" = true ] && [ "$INCLUDE_MYPY" = true ]; then
     echo "Adding mypy pre-commit hook..."
     cat "$SCRIPT_DIR/hooks/mypy.hook" >> .git/hooks/pre-commit
+    chmod +x .git/hooks/pre-commit
 fi
 
 if [ "$INCLUDE_PYTEST_HOOK" = true ] && [ "$INCLUDE_PYTEST" = true ]; then
     echo "Adding pytest pre-commit hook..."
     cat "$SCRIPT_DIR/hooks/pytest.hook" >> .git/hooks/pre-commit
+    chmod +x .git/hooks/pre-commit
 fi
 
 echo "Package initialization complete!"
