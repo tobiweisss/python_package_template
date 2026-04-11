@@ -34,6 +34,7 @@ jobs:
             -s dir \
             -t deb \
             -p dist/deb/package-init-${{ env.VERSION }}_any.deb \
+            --name package-init \
             --license MIT \
             --version ${{ env.VERSION }} \
             --architecture all \
@@ -51,6 +52,7 @@ jobs:
             -s dir \
             -t rpm \
             -p dist/rpm/package-init-${{ env.VERSION }}.rpm \
+            --name package-init \
             --license MIT \
             --version ${{ env.VERSION }} \
             --architecture noarch \

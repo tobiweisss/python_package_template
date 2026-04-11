@@ -68,39 +68,29 @@ package-init
 
 #### Option 1 (Recommended)
 
-```bash
-git clone https://github.com/tobiweisss/python_package_template.git
-cd python_package_template
-sudo ./install.sh
-```
+Download the package format for your platform from the [Releases]() page and install it using your system's package manager.
 
-Creates a symlink in `/usr/local/bin`, so you can use `package-init` globally.
-
-To update:
+For Ubuntu/Debian:
 
 ```bash
-git pull
+sudo dpkg -i package-init-<version>.deb
 ```
-in the repository directory.
 
----
+For Fedora/RHEL:
+```bash
+sudo rpm -i package-init-<version>.rpm
+```
 
 #### Option 2 (Manual)
+Clone the repository and add the script to your :
 
 ```bash
-sudo cp package-init.sh /usr/local/bin/package-init
-sudo cp -r configs /usr/local/bin/configs
-sudo cp -r hooks /usr/local/bin/hooks
-sudo chmod +x /usr/local/bin/package-init
+git clone https://github.com/tobiweisss/python_package_template.git
+cp python_package_template/package-init.sh /usr/bin/package-init
+chmod +x /usr/bin/package-init
+cp -r python_package_template/hooks/ /usr/share/package-init/hooks/
+cp -r python_package_template/configs/ /usr/share/package-init/configs/
 ```
-
-Then run:
-
-```bash
-package-init
-```
-
----
 
 ## 🤝 Contributing
 
