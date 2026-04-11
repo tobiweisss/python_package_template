@@ -1,0 +1,71 @@
+name: Build .deb and .rpm packages and release to GitHub
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "version.txt"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install fpm
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby ruby-dev build-essential rpm
+          sudo gem install --no-document fpm
+      
+      - name: Get the Version
+        id: get_version
+        run: echo "VERSION=$(cat version.txt)" >> $GITHUB_ENV
+
+      - name: Build packages
+        run: |
+          # Build .deb package
+          mkdir -p dist/deb
+          fpm \
+            -s dir \
+            -t deb \
+            -p dist/deb/package-init-${{ env.VERSION }}_any.deb \
+            --license MIT \
+            --version ${{ env.VERSION }} \
+            --architecture all \
+            --depends bash --depends uv \
+            --description "A lightweight script to quickly bootstrap a clean and modern Python package setup." \
+            --url "https://github.com/tobiweisss/python_package_template" \
+            --maintainer "Tobias Weiss" \
+            package-init.sh=/usr/bin/package-init \
+            configs/=/usr/share/package-init/configs \
+            hooks/=/usr/share/package-init/hooks 
+
+          # Build .rpm package
+          mkdir -p dist/rpm
+          fpm \
+            -s dir \
+            -t rpm \
+            -p dist/rpm/package-init-${{ env.VERSION }}.rpm \
+            --license MIT \
+            --version ${{ env.VERSION }} \
+            --architecture noarch \
+            --depends bash --depends uv \
+            --description "A lightweight script to quickly bootstrap a clean and modern Python package setup." \
+            --url "https://github.com/tobiweisss/python_package_template" \
+            --maintainer "Tobias Weiss" \
+            package-init.sh=/usr/bin/package-init \
+            configs/=/usr/share/package-init/configs \
+            hooks/=/usr/share/package-init/hooks 
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/deb/*.deb
+            dist/rpm/*.rpm
