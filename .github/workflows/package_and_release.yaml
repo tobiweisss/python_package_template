@@ -51,7 +51,7 @@ jobs:
           fpm \
             -s dir \
             -t rpm \
-            -p dist/rpm/package-init-${{ env.VERSION }}.rpm \
+            -p dist/rpm/package-init-${{ env.VERSION }}_any.rpm \
             --name package-init \
             --license MIT \
             --version ${{ env.VERSION }} \
@@ -64,10 +64,15 @@ jobs:
             configs/=/usr/share/package-init/configs \
             hooks/=/usr/share/package-init/hooks 
 
+      - name: Set release tag
+        run: echo "RELEASE_TAG=v${{ env.VERSION }}" >> $GITHUB_ENV
+
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Release ${{ env.RELEASE_TAG }}
           files: |
             dist/deb/*.deb
             dist/rpm/*.rpm
