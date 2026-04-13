@@ -16,7 +16,7 @@ usage() {
 }
 
 # Default values
-SCRIPT_DIR="/usr/share/package-init" 
+SCRIPT_DIR="/usr/share/package-init"
 # NOTE: if you want this script to live somewhere else, change the above path
 PYTHON_VERSION=""
 PACKAGE_NAME=""
