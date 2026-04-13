@@ -97,7 +97,8 @@ cp -r python_package_template/configs/ /usr/share/package-init/configs/
 
 
 ## Change Log
-- `0.1.4` - Let the pre-commit hook fail when ruff formats the code
+- `0.1.5` - fix pre-commit hook to fail when ruff formats the code
+- `0.1.4` - Let the pre-commit hook fail when ruff changes the code
 - `0.1.3` - Drop dependency on `uv` since uv is usually not installed via the system package manager.
 - `0.1.2` - Initial release with basic functionality and support for `ruff`, `mypy`, and `pytest`.
 
