@@ -73,12 +73,12 @@ Download the package format for your platform from the [Releases](https://github
 For Ubuntu/Debian:
 
 ```bash
-sudo dpkg -i package-init-<version>.deb
+sudo apt install package-init-<version>.deb
 ```
 
 For Fedora/RHEL:
 ```bash
-sudo rpm -i package-init-<version>.rpm
+sudo dnf install package-init-<version>.rpm
 ```
 
 > [!NOTE]
