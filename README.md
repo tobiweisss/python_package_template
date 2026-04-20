@@ -37,18 +37,22 @@ package-init
 ### ⚙️ Options
 
 ```bash
--v, --version       Specify the Python version for the virtual environment
--n, --name          Package name (default: current directory name)
+-v, --version           Specify the Python version for the virtual environment
+-n, --name              Package name (default: current directory name)
 
---no-ruff           Skip installing ruff
---no-mypy           Skip installing mypy
---no-pytest         Skip installing pytest
+--no-ruff               Skip installing ruff
+--no-mypy               Skip installing mypy (DEPRECATED: use --no-ty instead, will be removed in version: 1.0.0)
+--no-ty                 Skip installing ty for type checking
+--no-pytest             Skip installing pytest
 
---no-ruff-hook      Skip ruff pre-commit hook
---no-mypy-hook      Skip mypy pre-commit hook
---no-pytest-hook    Skip pytest pre-commit hook
+--no-ruff-hook          Skip ruff pre-commit hook
+--no-mypy-hook          Skip mypy pre-commit hook (DEPRECATED: use --no-ty-hook instead, will be removed in version: 1.0.0)
+--no-ty-hook            Skip ty pre-commit hook
+--no-pytest-hook        Skip pytest pre-commit hook
 
--h, --help          Show help message
+--include-ty-for-tests  Include test files in type checking (only applies if ty is included)
+
+-h, --help              Show help message
 ```
 
 > 💡 If a tool is not installed, its corresponding pre-commit hook will be disabled automatically.
@@ -97,6 +101,7 @@ cp -r python_package_template/configs/ /usr/share/package-init/configs/
 
 
 ## Change Log
+- `0.2.0` - switch from `mypy` to `ty` for type checking, add option to include type checking for test files
 - `0.1.5` - fix pre-commit hook to fail when ruff formats the code
 - `0.1.4` - Let the pre-commit hook fail when ruff changes the code
 - `0.1.3` - Drop dependency on `uv` since uv is usually not installed via the system package manager.
