@@ -13,7 +13,6 @@ usage() {
     echo "  --no-mypy-hook          do not include the mypy pre-commit hook in the project (DEPRECATED: use --no-ty-hook instead, will be removed in version: 1.0.0)"
     echo "  --no-ty-hook            do not include the ty pre-commit hook in the project"
     echo "  --no-pytest-hook        do not include the pytest pre-commit hook in the project"
-    echo "  --include-ty-for-tests  type check test files (only applies if ty is included)"
     echo "  -h, --help              show this help message and exit"
     exit 1
 }
@@ -29,7 +28,6 @@ INCLUDE_PYTEST=true
 INCLUDE_RUFF_HOOK=true
 INCLUDE_TY_HOOK=true
 INCLUDE_PYTEST_HOOK=true
-INCLUDE_TY_FOR_TESTS=false
 
 
 # Parse command-line arguments
@@ -79,10 +77,6 @@ handle_args() {
             -h|--help)
                 usage
                 ;;
-            --include-ty-for-tests)
-                INCLUDE_TY_FOR_TESTS=true
-                shift
-                ;;
             *)
                 echo "Unknown option: $1" >&2
                 usage
@@ -129,11 +123,6 @@ fi
 if [ "$INCLUDE_TY" = true ]; then
     echo "Adding ty to the virtual environment..."
     uv add --dev ty
-    # Add ty config to pyproject.toml
-    if [ "$INCLUDE_TY_FOR_TESTS" = false ]; then
-        echo "Adding ty configuration to pyproject.toml..."
-        cat "$SCRIPT_DIR/configs/ty-config.toml" >> pyproject.toml
-    else
 fi
 
 if [ "$INCLUDE_PYTEST" = true ]; then
