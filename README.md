@@ -50,8 +50,6 @@ package-init
 --no-ty-hook            Skip ty pre-commit hook
 --no-pytest-hook        Skip pytest pre-commit hook
 
---include-ty-for-tests  Include test files in type checking (only applies if ty is included)
-
 -h, --help              Show help message
 ```
 
@@ -101,7 +99,8 @@ cp -r python_package_template/configs/ /usr/share/package-init/configs/
 
 
 ## Change Log
-- `0.2.0` - switch from `mypy` to `ty` for type checking, add option to include type checking for test files
+- `0.2.1` - Fix pre-commit hook to fail when `ty`, `ruff` or `pytest` returns a non-zero exit code.
+- `0.2.0` - switch from `mypy` to `ty` for type checking
 - `0.1.5` - fix pre-commit hook to fail when ruff formats the code
 - `0.1.4` - Let the pre-commit hook fail when ruff changes the code
 - `0.1.3` - Drop dependency on `uv` since uv is usually not installed via the system package manager.
