@@ -1,2 +1,6 @@
 #!/bin/bash
 uv run pytest
+if [ $? -ne 0 ]; then
+    echo "Tests failed. Please fix the issues before committing."
+    exit 1
+fi
