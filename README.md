@@ -101,7 +101,6 @@ cp -r python_package_template/configs/ /usr/share/package-init/configs/
 
 
 ## Change Log
-- `0.2.1` - fix pre-commit hook for type checking to work with `ty`, ignore `*.ipynb` files in type checking by default
 - `0.2.0` - switch from `mypy` to `ty` for type checking, add option to include type checking for test files
 - `0.1.5` - fix pre-commit hook to fail when ruff formats the code
 - `0.1.4` - Let the pre-commit hook fail when ruff changes the code
