@@ -3,15 +3,18 @@
 usage() {
     echo "Usage: $0 [options]"
     echo "Options:"
-    echo "  -v, --version       specify the python version to use for the virtual environment"
-    echo "  -n, --name          specify the name of the package to be created (default: the name of the directory)"
-    echo "  --no-ruff           do not include ruff in the virtual environment"
-    echo "  --no-mypy           do not include mypy in the virtual environment"
-    echo "  --no-pytest         do not include pytest in the virtual environment"
-    echo "  --no-ruff-hook      do not include the ruff pre-commit hook in the project"
-    echo "  --no-mypy-hook      do not include the mypy pre-commit hook in the project"
-    echo "  --no-pytest-hook    do not include the pytest pre-commit hook in the project"
-    echo "  -h, --help          show this help message and exit"
+    echo "  -v, --version           specify the python version to use for the virtual environment"
+    echo "  -n, --name              specify the name of the package to be created (default: the name of the directory)"
+    echo "  --no-ruff               do not include ruff in the virtual environment"
+    echo "  --no-mypy               do not include mypy in the virtual environment (DEPRECATED: use --no-ty instead, will be removed in version: 1.0.0)"
+    echo "  --no-ty                 do not include ty in the virtual environment"
+    echo "  --no-pytest             do not include pytest in the virtual environment"
+    echo "  --no-ruff-hook          do not include the ruff pre-commit hook in the project"
+    echo "  --no-mypy-hook          do not include the mypy pre-commit hook in the project (DEPRECATED: use --no-ty-hook instead, will be removed in version: 1.0.0)"
+    echo "  --no-ty-hook            do not include the ty pre-commit hook in the project"
+    echo "  --no-pytest-hook        do not include the pytest pre-commit hook in the project"
+    echo "  --include-ty-for-tests  type check test files (only applies if ty is included)"
+    echo "  -h, --help              show this help message and exit"
     exit 1
 }
 
@@ -21,11 +24,12 @@ SCRIPT_DIR="/usr/share/package-init"
 PYTHON_VERSION=""
 PACKAGE_NAME=""
 INCLUDE_RUFF=true
-INCLUDE_MYPY=true
+INCLUDE_TY=true
 INCLUDE_PYTEST=true
 INCLUDE_RUFF_HOOK=true
-INCLUDE_MYPY_HOOK=true
+INCLUDE_TY_HOOK=true
 INCLUDE_PYTEST_HOOK=true
+INCLUDE_TY_FOR_TESTS=false
 
 
 # Parse command-line arguments
@@ -45,7 +49,11 @@ handle_args() {
                 shift
                 ;;
             --no-mypy)
-                INCLUDE_MYPY=false
+                INCLUDE_TY=false
+                shift
+                ;;
+            --no-ty)
+                INCLUDE_TY=false
                 shift
                 ;;
             --no-pytest)
@@ -57,7 +65,11 @@ handle_args() {
                 shift
                 ;;
             --no-mypy-hook)
-                INCLUDE_MYPY_HOOK=false
+                INCLUDE_TY_HOOK=false
+                shift
+                ;;
+            --no-ty-hook)
+                INCLUDE_TY_HOOK=false
                 shift
                 ;;
             --no-pytest-hook)
@@ -66,6 +78,10 @@ handle_args() {
                 ;;
             -h|--help)
                 usage
+                ;;
+            --include-ty-for-tests)
+                INCLUDE_TY_FOR_TESTS=true
+                shift
                 ;;
             *)
                 echo "Unknown option: $1" >&2
@@ -84,10 +100,10 @@ echo "Initializing package with the following settings:"
 echo "  Python version: ${PYTHON_VERSION:-default}"
 echo "  Package name: ${PACKAGE_NAME:-default (directory name)}"
 echo "  Include ruff: ${INCLUDE_RUFF}"
-echo "  Include mypy: ${INCLUDE_MYPY}"
+echo "  Include ty: ${INCLUDE_TY}"
 echo "  Include pytest: ${INCLUDE_PYTEST}"
 echo "  Include ruff pre-commit hook: ${INCLUDE_RUFF_HOOK}"
-echo "  Include mypy pre-commit hook: ${INCLUDE_MYPY_HOOK}"
+echo "  Include ty pre-commit hook: ${INCLUDE_TY_HOOK}"
 echo ""
 
 if [ -n "$PYTHON_VERSION" ]; then
@@ -110,12 +126,14 @@ if [ "$INCLUDE_RUFF" = true ]; then
     cat "$SCRIPT_DIR/configs/ruff-config.toml" >> pyproject.toml
 fi
 
-if [ "$INCLUDE_MYPY" = true ]; then
-    echo "Adding mypy to the virtual environment..."
-    uv add --dev mypy
-    # Add mypy config to pyproject.toml
-    echo "Adding mypy configuration to pyproject.toml..."
-    cat "$SCRIPT_DIR/configs/mypy-config.toml" >> pyproject.toml
+if [ "$INCLUDE_TY" = true ]; then
+    echo "Adding ty to the virtual environment..."
+    uv add --dev ty
+    # Add ty config to pyproject.toml
+    if [ "$INCLUDE_TY_FOR_TESTS" = false ]; then
+        echo "Adding ty configuration to pyproject.toml..."
+        cat "$SCRIPT_DIR/configs/ty-config.toml" >> pyproject.toml
+    else
 fi
 
 if [ "$INCLUDE_PYTEST" = true ]; then
@@ -129,9 +147,9 @@ if [ "$INCLUDE_RUFF_HOOK" = true ] && [ "$INCLUDE_RUFF" = true ]; then
     chmod +x .git/hooks/pre-commit
 fi
 
-if [ "$INCLUDE_MYPY_HOOK" = true ] && [ "$INCLUDE_MYPY" = true ]; then
-    echo "Adding mypy pre-commit hook..."
-    cat "$SCRIPT_DIR/hooks/mypy.hook" >> .git/hooks/pre-commit
+if [ "$INCLUDE_TY_HOOK" = true ] && [ "$INCLUDE_TY" = true ]; then
+    echo "Adding ty pre-commit hook..."
+    cat "$SCRIPT_DIR/hooks/ty.hook" >> .git/hooks/pre-commit
     chmod +x .git/hooks/pre-commit
 fi
 
