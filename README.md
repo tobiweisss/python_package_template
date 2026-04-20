@@ -99,6 +99,7 @@ cp -r python_package_template/configs/ /usr/share/package-init/configs/
 
 
 ## Change Log
+- `0.2.2` - Fix pre-commit hook to just print a warning, when `pytest` did not find any tests, instead of failing the hook.
 - `0.2.1` - Fix pre-commit hook to fail when `ty`, `ruff` or `pytest` returns a non-zero exit code.
 - `0.2.0` - switch from `mypy` to `ty` for type checking
 - `0.1.5` - fix pre-commit hook to fail when ruff formats the code
