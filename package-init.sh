@@ -5,6 +5,7 @@ usage() {
     echo "Options:"
     echo "  -v, --version           specify the python version to use for the virtual environment"
     echo "  -n, --name              specify the name of the package to be created (default: the name of the directory)"
+    echo "  -c, --claude            also initialize CLAUDE.md in the new package"
     echo "  --no-ruff               do not include ruff in the virtual environment"
     echo "  --no-mypy               do not include mypy in the virtual environment (DEPRECATED: use --no-ty instead, will be removed in version: 1.0.0)"
     echo "  --no-ty                 do not include ty in the virtual environment"
@@ -28,7 +29,7 @@ INCLUDE_PYTEST=true
 INCLUDE_RUFF_HOOK=true
 INCLUDE_TY_HOOK=true
 INCLUDE_PYTEST_HOOK=true
-
+INIT_CLAUDE=false
 
 # Parse command-line arguments
 handle_args() {
@@ -41,6 +42,10 @@ handle_args() {
             -n|--name)
                 PACKAGE_NAME="$2"
                 shift 2
+                ;;
+            -c|--claude)
+                INIT_CLAUDE=true
+                shift
                 ;;
             --no-ruff)
                 INCLUDE_RUFF=false
@@ -98,6 +103,7 @@ echo "  Include ty: ${INCLUDE_TY}"
 echo "  Include pytest: ${INCLUDE_PYTEST}"
 echo "  Include ruff pre-commit hook: ${INCLUDE_RUFF_HOOK}"
 echo "  Include ty pre-commit hook: ${INCLUDE_TY_HOOK}"
+echo "  Initialize claude-code: ${INIT_CLAUDE}"
 echo ""
 
 if [ -n "$PYTHON_VERSION" ]; then
@@ -110,6 +116,12 @@ fi
 
 if [ -n "$PACKAGE_NAME" ]; then
     cd "$PACKAGE_NAME"
+fi
+
+# Initialize CLAUDE.md if requested
+if [ "$INIT_CLAUDE" = true ]; then
+    echo "Adding CLAUDE.md to the new package..."
+    cp "$SCRIPT_DIR/configs/claude/CLAUDE.md" .
 fi
 
 if [ "$INCLUDE_RUFF" = true ]; then

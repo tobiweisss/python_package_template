@@ -99,6 +99,7 @@ cp -r python_package_template/configs/ /usr/share/package-init/configs/
 
 
 ## Change Log
+- `0.3.0` - Add `--claude` flag to also initialize a `CLAUDE.md` file in the new package, containing guidelines for contributing code changes.
 - `0.2.2` - Fix pre-commit hook to just print a warning, when `pytest` did not find any tests, instead of failing the hook.
 - `0.2.1` - Fix pre-commit hook to fail when `ty`, `ruff` or `pytest` returns a non-zero exit code.
 - `0.2.0` - switch from `mypy` to `ty` for type checking
