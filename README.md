@@ -14,14 +14,14 @@ A lightweight script to quickly bootstrap a clean and modern Python package setu
 * 🧪 Automatically add development tools:
 
   * `ruff` (linting & formatting)
-  * `mypy` (type checking)
+  * `ty` (type checking)
   * `pytest` (testing)
 * ⚙️ Preconfigured `pyproject.toml`
 * 🔁 Pre-commit hooks for:
 
   * formatting (`ruff format`)
   * linting (`ruff check`)
-  * type checking (`mypy`)
+  * type checking (`ty`)
   * testing (`pytest`)
 
 ---

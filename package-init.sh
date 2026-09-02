@@ -5,6 +5,7 @@ usage() {
     echo "Options:"
     echo "  -v, --version           specify the python version to use for the virtual environment"
     echo "  -n, --name              specify the name of the package to be created (default: the name of the directory)"
+    echo "  -c, --claude            enable creation of Claude‑Code configuration files"
     echo "  --no-ruff               do not include ruff in the virtual environment"
     echo "  --no-mypy               do not include mypy in the virtual environment (DEPRECATED: use --no-ty instead, will be removed in version: 1.0.0)"
     echo "  --no-ty                 do not include ty in the virtual environment"
@@ -28,6 +29,7 @@ INCLUDE_PYTEST=true
 INCLUDE_RUFF_HOOK=true
 INCLUDE_TY_HOOK=true
 INCLUDE_PYTEST_HOOK=true
+INCLUDE_CLAUDE=false
 
 
 # Parse command-line arguments
@@ -146,6 +148,72 @@ if [ "$INCLUDE_PYTEST_HOOK" = true ] && [ "$INCLUDE_PYTEST" = true ]; then
     echo "Adding pytest pre-commit hook..."
     cat "$SCRIPT_DIR/hooks/pytest.hook" >> .git/hooks/pre-commit
     chmod +x .git/hooks/pre-commit
+fi
+
+if [ "$INCLUDE_CLAUDE" = true ]; then
+  mkdir -p .claude
+
+  # Generate CLAUDE.md with project details
+  cat <<'EOF' > .claude/CLAUDE.md
+  # Project Description
+
+  <!-- Add a brief overview of the project -->
+
+  # Structure
+
+  - `package-init.sh` – initialization script
+  - `configs/` – tool configuration files
+  - `hooks/` – pre‑commit hook scripts
+  - `.claude/` – Claude‑Code configuration
+
+  # Code Guidelines
+
+  - Follow PEP 8 style (ruff will enforce)
+  - Use type hints (ty will check)
+  - Write tests for all public functions (pytest)
+
+  # Tools
+
+  - **ruff** – linting and formatting
+  - **ty** – type checking (replaces mypy)
+  - **pytest** – test runner
+  EOF
+
+  # Create Claude‑Code settings describing used tools and hooks
+  cat <<'EOF' > .claude/settings.json
+  {
+    "language": "python",
+    "tools": {
+      "ruff": ${INCLUDE_RUFF},
+      "ty": ${INCLUDE_TY},
+      "pytest": ${INCLUDE_PYTEST}
+    },
+    "hooks": {
+      "ruff": ${INCLUDE_RUFF_HOOK},
+      "ty": ${INCLUDE_TY_HOOK},
+      "pytest": ${INCLUDE_PYTEST_HOOK}
+    }
+  }
+  EOF
+
+  # Example agent configurations for testing and code review
+  mkdir -p .claude/agents
+  cat <<'EOF' > .claude/agents/testing.json
+  {
+    "name": "testing",
+    "description": "Run pytest on the project",
+    "command": "pytest"
+  }
+  EOF
+
+  cat <<'EOF' > .claude/agents/code_review.json
+  {
+    "name": "code_review",
+    "description": "Run code‑review skill on the current diff",
+    "command": "/code-review --effort medium"
+  }
+  EOF
+
 fi
 
 echo "Package initialization complete!"
